@@ -33,8 +33,8 @@ pip install -r requirements.txt
 
 3. Set up environment variables by creating a `.env` file:
 ```
-AWS_PROFILE="your-aws-profile"
-AWS_DEFAULT_REGION="your-aws-region"  # Optional if defined in profile
+# Copy from .env.example and modify as needed
+cp .env.example .env
 ```
 
 ### Model Selection
@@ -76,6 +76,20 @@ This script (`test_bedrock.py`) is a standalone utility that:
 - Provides detailed troubleshooting information if connection issues occur
 - Uses the model configuration system for selecting which model to test
 
+### Testing OpenSearch Connection
+
+Test your OpenSearch connectivity and agent functionality:
+```bash
+python test_opensearch.py
+```
+
+This script (`test_opensearch.py`):
+- Validates your OpenSearch connection settings
+- Creates a test index with mapping
+- Indexes a sample document
+- Performs searches using both direct query and simple text search
+- Provides detailed output of each operation
+
 ## Current Implementations
 
 ### Weather and Time Agent
@@ -86,6 +100,18 @@ Located in `test-agent/agent.py`, this first implementation provides:
 - Uses Claude 3.5 Sonnet via AWS Bedrock
 
 This initial agent serves as a proof of concept and verification that the framework functions correctly.
+
+### OpenSearch Agent
+
+Located in `opensearch_agent/agent.py`, this implementation provides:
+- Connection to OpenSearch clusters
+- Index creation with custom mappings
+- Document indexing with optional ID specification
+- Document search using OpenSearch Query DSL
+- Simple text-based search with automatic query generation
+- Document deletion by ID
+
+The OpenSearch agent demonstrates how to integrate external data stores with LLM agents to enable semantic search and data management capabilities.
 
 ## Future Work
 
