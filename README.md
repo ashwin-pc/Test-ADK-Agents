@@ -37,6 +37,32 @@ AWS_PROFILE="your-aws-profile"
 AWS_DEFAULT_REGION="your-aws-region"  # Optional if defined in profile
 ```
 
+### Model Selection
+
+This project uses a simple constant-based model selection system that makes it easy to work with different models based on their capabilities rather than specific identifiers:
+
+```python
+# Import models based on their capabilities
+from agent_models import FAST_MODEL, SMART_MODEL, POWERFUL_MODEL
+
+# Or use semantic aliases
+from agent_models import LITE_MODEL, STANDARD_MODEL, THINKING_MODEL
+
+# Create an agent with the chosen model
+agent = LlmAgent(
+    name="my_agent",
+    model=LiteLlm(model=SMART_MODEL),
+    # other parameters...
+)
+```
+
+You can override the default models by setting environment variables in your `.env` file:
+```
+AGENT_FAST_MODEL=bedrock/your-preferred-fast-model
+AGENT_SMART_MODEL=bedrock/your-preferred-smart-model
+AGENT_POWERFUL_MODEL=bedrock/your-preferred-powerful-model
+```
+
 ### Testing AWS Connection
 
 Verify your AWS Bedrock connectivity:
@@ -48,6 +74,7 @@ This script (`test_bedrock.py`) is a standalone utility that:
 - Validates your AWS credentials and environment configuration
 - Tests your Bedrock API access by making a simple call to a specified model
 - Provides detailed troubleshooting information if connection issues occur
+- Uses the model configuration system for selecting which model to test
 
 ## Current Implementations
 

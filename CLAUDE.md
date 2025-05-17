@@ -30,6 +30,35 @@ AWS_PROFILE="your-aws-profile"
 AWS_DEFAULT_REGION="your-aws-region"  # Optional if already in AWS profile
 ```
 
+### Model Configuration
+
+The project uses a simple, constant-based model selection in `agent_models.py`, making it easy to use different LLM models without hard-coding them in your agents:
+
+```python
+from agent_models import FAST_MODEL, SMART_MODEL, POWERFUL_MODEL
+
+# Or use the semantic aliases
+from agent_models import LITE_MODEL, STANDARD_MODEL, THINKING_MODEL
+
+# Example agent creation
+agent = LlmAgent(
+    name="my_agent",
+    model=LiteLlm(model=SMART_MODEL),
+    # other parameters...
+)
+```
+
+You can override model selections by setting environment variables in your `.env` file:
+
+```
+# Override default model settings
+AGENT_FAST_MODEL=bedrock/anthropic.claude-3-haiku-20240307-v1:0
+AGENT_SMART_MODEL=bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+AGENT_POWERFUL_MODEL=bedrock/anthropic.claude-3-opus-20240229-v1:0
+```
+
+This approach makes it easy to change models across your entire application by updating just one file or setting environment variables.
+
 ## Running the Test Script
 
 To test AWS Bedrock connectivity and model access:

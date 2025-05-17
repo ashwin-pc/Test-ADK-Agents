@@ -2,6 +2,12 @@ import datetime
 from zoneinfo import ZoneInfo
 from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
+import sys
+import os
+
+# Add the parent directory to sys.path to allow importing from the parent directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from agent_models import SMART_MODEL
 
 def get_weather(city: str) -> dict:
     """Retrieves the current weather report for a specified city.
@@ -54,9 +60,10 @@ def get_current_time(city: str) -> dict:
     )
     return {"status": "success", "report": report}
 
+# Simply use the predefined model - no configuration needed
 root_agent = LlmAgent(
     name="weather_time_agent",
-    model=LiteLlm(model="bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"),
+    model=LiteLlm(model=SMART_MODEL),
     description=(
         "Agent to answer questions about the time and weather in a city."
     ),

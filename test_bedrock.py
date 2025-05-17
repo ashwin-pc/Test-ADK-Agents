@@ -1,6 +1,7 @@
 import os
 import litellm
 from dotenv import load_dotenv
+from agent_models import FAST_MODEL
 
 # ANSI color codes for terminal output
 class Colors:
@@ -74,8 +75,8 @@ def main():
         print_warning("AWS region (AWS_DEFAULT_REGION or AWS_REGION) is not set")
         print_info("Ensure your AWS profile specifies a default region, or set it in the .env file")
 
-    # Define the Bedrock model to test
-    bedrock_model = "bedrock/anthropic.claude-3-haiku-20240307-v1:0"  # Example
+    # Use the predefined fast model
+    bedrock_model = FAST_MODEL
     
     print_section("Bedrock API Test")
     print_info(f"Testing model: {Colors.BOLD}{bedrock_model}{Colors.END}{Colors.CYAN}")
