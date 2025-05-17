@@ -2,47 +2,83 @@ import os
 import litellm
 from dotenv import load_dotenv
 
+# ANSI color codes for terminal output
+class Colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
+
+
+def print_header(message):
+    print(f"\n{Colors.HEADER}{Colors.BOLD}{'=' * 80}{Colors.END}")
+    print(f"{Colors.HEADER}{Colors.BOLD}{message.center(80)}{Colors.END}")
+    print(f"{Colors.HEADER}{Colors.BOLD}{'=' * 80}{Colors.END}\n")
+
+
+def print_section(message):
+    print(f"\n{Colors.BLUE}{Colors.BOLD}{message}{Colors.END}")
+    print(f"{Colors.BLUE}{'-' * 40}{Colors.END}")
+
+
+def print_success(message):
+    print(f"{Colors.GREEN}✅ {message}{Colors.END}")
+
+
+def print_info(message):
+    print(f"{Colors.CYAN}{message}{Colors.END}")
+
+
+def print_warning(message):
+    print(f"{Colors.YELLOW}⚠️ {message}{Colors.END}")
+
+
+def print_error(message):
+    print(f"{Colors.RED}❌ {message}{Colors.END}")
+
+
 def main():
-    # Load environment variables from .env file.
-    # This will load AWS_PROFILE (and AWS_DEFAULT_REGION if present)
-    # directly into os.environ.
-    # By default, load_dotenv() does NOT override existing environment variables.
-    # If you want the .env file to always take precedence, use load_dotenv(override=True)
+    print_header("AWS Bedrock Connection Test")
+    
+    # Load environment variables from .env file
+    print_section("Environment Setup")
     loaded_env = load_dotenv(override=True)
 
     if loaded_env:
-        print("Loaded .env file. Variables from .env will override existing ones if any conflict.")
+        print_success("Loaded .env file successfully")
     else:
-        print("Warning: .env file not found. Relying on pre-existing environment variables if any.")
+        print_warning(".env file not found. Using existing environment variables")
 
-    # Get the AWS_PROFILE value that is now in the environment.
-    # boto3 (used by litellm) will automatically pick up AWS_PROFILE from os.environ.
+    # Get AWS configuration
     aws_profile_in_use = os.getenv("AWS_PROFILE")
     aws_region_in_use = os.getenv("AWS_DEFAULT_REGION") or os.getenv("AWS_REGION")
 
-
     if not aws_profile_in_use:
-        print("Error: AWS_PROFILE is not set in your environment or .env file.")
-        print("Please ensure your .env file contains: AWS_PROFILE=\"your-profile-name\"")
-        print("Or that AWS_PROFILE is exported in your shell environment.")
+        print_error("AWS_PROFILE is not set in your environment or .env file")
+        print_info("Please ensure your .env file contains: AWS_PROFILE=\"your-profile-name\"")
+        print_info("Or that AWS_PROFILE is exported in your shell environment")
         return
 
-    print(f"Using AWS Profile: {aws_profile_in_use}")
+    print_section("AWS Configuration")
+    print_info(f"AWS Profile: {Colors.BOLD}{aws_profile_in_use}{Colors.END}{Colors.CYAN}")
+    
     if aws_region_in_use:
-        print(f"Using AWS Region: {aws_region_in_use}")
-        # Ensure AWS_REGION is also set as some tools might prefer it, though
-        # AWS_DEFAULT_REGION is standard for boto3 configuration.
-        os.environ["AWS_REGION"] = aws_region_in_use # Redundant if AWS_DEFAULT_REGION is picked up, but safe.
+        print_info(f"AWS Region: {Colors.BOLD}{aws_region_in_use}{Colors.END}{Colors.CYAN}")
+        os.environ["AWS_REGION"] = aws_region_in_use
     else:
-        print("Warning: AWS region (AWS_DEFAULT_REGION or AWS_REGION) is not set. ")
-        print("Ensure your AWS profile specifies a default region, or set it in the .env file.")
+        print_warning("AWS region (AWS_DEFAULT_REGION or AWS_REGION) is not set")
+        print_info("Ensure your AWS profile specifies a default region, or set it in the .env file")
 
-
-    # Define the Bedrock model you want to test with
-    # Replace with a model ID you have access to in your Bedrock region.
-    bedrock_model = "bedrock/anthropic.claude-3-haiku-20240307-v1:0" # Example
-
-    print(f"Attempting to call Bedrock model: {bedrock_model}")
+    # Define the Bedrock model to test
+    bedrock_model = "bedrock/anthropic.claude-3-haiku-20240307-v1:0"  # Example
+    
+    print_section("Bedrock API Test")
+    print_info(f"Testing model: {Colors.BOLD}{bedrock_model}{Colors.END}{Colors.CYAN}")
 
     messages = [
         {"role": "user", "content": "Hello, Bedrock! Briefly introduce yourself."}
@@ -53,24 +89,32 @@ def main():
             model=bedrock_model,
             messages=messages
         )
-        print("\nBedrock Model Response:")
+        
+        print_section("Bedrock Response")
+        
         if response.choices and response.choices[0].message and response.choices[0].message.content:
-            print(response.choices[0].message.content)
+            content = response.choices[0].message.content.strip()
+            print_info(content)
         else:
-            print("Received an unexpected response structure:")
+            print_warning("Received an unexpected response structure:")
             print(response)
 
-        print(f"\nSuccessfully authenticated and received response from Bedrock using profile: {aws_profile_in_use}")
+        print_section("Test Results")
+        print_success(f"Successfully connected to AWS Bedrock using profile: {aws_profile_in_use}")
+        print_success("API request completed successfully")
+        print_success("Model response received correctly")
 
     except Exception as e:
-        print(f"\nAn error occurred:")
-        print(e)
-        print("\nPlease double-check the following:")
-        print(f"1. The AWS profile '{aws_profile_in_use}' is correctly configured in your ~/.aws/credentials and ~/.aws/config files.")
-        print(f"2. The profile '{aws_profile_in_use}' has the necessary IAM permissions for Amazon Bedrock and the model '{bedrock_model}'.")
-        print(f"3. The model '{bedrock_model}' is available in the AWS region being used.")
-        print("4. Your AWS credentials (if using static keys in the profile) are valid and not expired.")
-        print("5. If your profile uses MFA, ensure you have an active MFA session for the AWS CLI if it relies on that, or that your profile handles MFA for SDK access.")
+        print_section("Error Information")
+        print_error(f"An error occurred: {str(e)}")
+        
+        print_section("Troubleshooting")
+        print_info(f"1. Check that AWS profile '{aws_profile_in_use}' is correctly configured")
+        print_info(f"2. Verify that profile has necessary IAM permissions for Bedrock and model '{bedrock_model}'")
+        print_info(f"3. Confirm model '{bedrock_model}' is available in region '{aws_region_in_use}'")
+        print_info("4. Check that AWS credentials are valid and not expired")
+        print_info("5. If using MFA, ensure you have an active session")
+
 
 if __name__ == "__main__":
     main()
