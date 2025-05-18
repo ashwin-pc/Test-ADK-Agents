@@ -90,6 +90,65 @@ This script (`test_opensearch.py`):
 - Performs searches using both direct query and simple text search
 - Provides detailed output of each operation
 
+## ADK Commands and Tools
+
+### ADK CLI Commands
+
+Google's Agent Development Kit (ADK) provides a suite of command-line tools to help with agent development:
+
+```bash
+# Show all available ADK commands and options
+adk --help
+
+# Create a new agent project with prepopulated templates
+adk create
+
+# Run your agent interactively in the CLI
+adk run
+
+# Start a FastAPI server with Web UI for interactive agent development
+adk web
+
+# Deploy your agent to hosted environments
+adk deploy
+
+# Evaluate your agent using evaluation sets
+adk eval
+
+# Start a FastAPI server for agent API access
+adk api_server
+```
+
+### ADK Web Interface
+
+The ADK also provides a web interface for interactive development and testing:
+
+```bash
+# Start the ADK web interface
+adk web
+```
+
+The web interface allows you to:
+- Interact with your agent in real-time
+- View detailed traces of agent execution
+- Debug tool calls and responses
+- Test different prompts and configurations
+- Analyze performance metrics
+- Export conversations for future testing
+
+By default, the web interface runs at `http://localhost:8080` and provides a user-friendly dashboard for agent development.
+
+### ADK Configuration
+
+Configure your ADK project by editing the `adk.yaml` file in your project root:
+
+```yaml
+project_id: your-project-id
+agent_name: your-agent-name
+region: your-region
+model: your-model-id
+```
+
 ## Current Implementations
 
 ### Weather and Time Agent

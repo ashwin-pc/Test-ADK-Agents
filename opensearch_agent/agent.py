@@ -4,7 +4,7 @@ from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
 import sys
 import json
-from typing import Optional
+from typing import Optional, Any, Dict, List, Union
 
 # Add the parent directory to sys.path to allow importing from the parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -264,22 +264,66 @@ def simple_search(index_name: str, query_string: str) -> dict:
     query = parse_query_string(query_string)
     return search_documents(index_name, query)
 
+def execute_opensearch_api(
+    method: str,
+    endpoint_path: str,
+    body: Optional[dict] = None,
+    params: Optional[dict] = None
+) -> dict:
+    """
+    General purpose function to execute any OpenSearch API endpoint directly.
+    
+    This function allows direct access to the underlying OpenSearch APIs beyond
+    what's available through the specialized functions. Use this when you need
+    access to advanced features or APIs not covered by the other functions.
+    
+    Args:
+        method (str): HTTP method (GET, POST, PUT, DELETE, etc.)
+        endpoint_path (str): OpenSearch API endpoint path (e.g., '/_cat/indices', '/my_index/_mapping', etc.)
+        body (Optional[Union[Dict[str, Any], List[Any]]]): Request body (for POST/PUT/etc. requests)
+        params (Optional[Dict[str, Any]]): URL query parameters
+        
+    Returns:
+        dict: status and response or error message
+    """
+    try:
+        client = connect_to_opensearch()
+        response = client.transport.perform_request(
+            method=method.upper(),
+            url=endpoint_path,
+            body=body,
+            params=params
+        )
+        # Convert response to JSON string for compatibility
+        return {
+            "status": "success",
+            "result": json.dumps(response)
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error_message": f"OpenSearch API request failed: {str(e)}"
+        }
+
 # Create the OpenSearch agent
 opensearch_agent = LlmAgent(
     name="opensearch_agent",
     model=LiteLlm(model=SMART_MODEL),
-    description="Agent to interact with OpenSearch for indexing and searching data",
+    description="Agent to interact with OpenSearch for indexing, searching, and accessing any OpenSearch API",
     instruction=(
         "You are a helpful agent who can interact with OpenSearch to index, "
         "search, and manage documents. You can create indices, add documents, "
-        "search for information, and delete documents."
+        "search for information, and delete documents. You also have access to a general-purpose "
+        "function to use any OpenSearch API endpoint directly, allowing advanced operations "
+        "beyond the specialized functions."
     ),
     tools=[
         create_index, 
         index_document, 
         search_documents,
         simple_search,
-        delete_document
+        delete_document,
+        execute_opensearch_api
     ],
 )
 
