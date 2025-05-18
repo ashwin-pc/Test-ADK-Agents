@@ -4,6 +4,7 @@ from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
 import sys
 import json
+from typing import Optional
 
 # Add the parent directory to sys.path to allow importing from the parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -47,7 +48,7 @@ def connect_to_opensearch() -> OpenSearch:
     
     return client
 
-def create_index(index_name: str, mapping: dict = None) -> dict:
+def create_index(index_name: str, mapping: Optional[dict] = None) -> dict:
     """
     Creates an index in OpenSearch with optional mapping.
     
@@ -85,14 +86,14 @@ def create_index(index_name: str, mapping: dict = None) -> dict:
             "error_message": f"Failed to create index: {str(e)}"
         }
 
-def index_document(index_name: str, document: dict, doc_id: str = None) -> dict:
+def index_document(index_name: str, document: dict, doc_id: Optional[str] = None) -> dict:
     """
     Indexes a document into OpenSearch.
     
     Args:
         index_name (str): The index to add the document to
         document (dict): The document to index
-        doc_id (str, optional): Document ID, will be generated if not provided
+        doc_id (Optional[str], optional): Document ID, will be generated if not provided
     
     Returns:
         dict: status and result or error message
