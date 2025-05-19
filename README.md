@@ -172,6 +172,39 @@ Located in `opensearch_agent/agent.py`, this implementation provides:
 
 The OpenSearch agent demonstrates how to integrate external data stores with LLM agents to enable semantic search and data management capabilities.
 
+### Repository Agent with Claude Code
+
+Located in `repo_agent/agent.py`, this implementation provides:
+- Integration with the Claude Code CLI to analyze repositories
+- Code search functionality to find patterns and concepts in codebases
+- Code explanation capability to understand files or specific code sections
+- Code modification tools to implement changes based on instructions
+- General task execution for repository-related operations
+
+The Repository Agent demonstrates how to leverage Claude's advanced code understanding capabilities within an agent framework to interact with code repositories.
+
+#### Testing the Repository Agent
+
+Test your Repository Agent setup with a local repository:
+```bash
+python test_repo_agent.py --repo-path /path/to/your/repository
+```
+
+This test script:
+- Verifies that Claude Code CLI is properly installed
+- Tests access to the specified repository
+- Runs a simple Claude Code query against the repository
+- Tests the agent's search functionality
+
+**Prerequisites:**
+- Claude Code CLI must be installed (`npm install -g @anthropic-ai/claude-code`)
+- A local code repository to test with
+
+If you use a custom alias for Claude Code (like `cc`), you can configure it by setting the `CLAUDE_CODE_CMD` environment variable in your `.env` file:
+```
+CLAUDE_CODE_CMD=cc
+```
+
 ## Future Work
 
 - Implement additional agent types and capabilities
