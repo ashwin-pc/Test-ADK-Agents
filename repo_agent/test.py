@@ -1,11 +1,14 @@
 import os
+import sys
 from dotenv import load_dotenv
 import subprocess
-import sys
 import argparse
 import json
 import shlex
 import shutil
+
+# Add the parent directory to sys.path to allow importing from the parent directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # ANSI color codes for terminal output
 class Colors:
@@ -162,7 +165,7 @@ def test_claude_code_query(repo_path, query="list files"):
 def main():
     parser = argparse.ArgumentParser(description="Test the Repository Agent with Claude Code")
     parser.add_argument("--repo-path", required=True, help="Path to the repository to test with")
-    parser.add_argument("--query", default="list files", help="Test query to run (default: 'list files')")
+    parser.add_argument("--query", default="What is this repository about?", help="Test query to run (default: 'What is this repository about?')")
     args = parser.parse_args()
     
     print_header("Repository Agent Test")

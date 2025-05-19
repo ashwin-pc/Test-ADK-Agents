@@ -1,9 +1,9 @@
 import os
+import sys
 from dotenv import load_dotenv
 from opensearchpy import OpenSearch, RequestsHttpConnection
 import requests
 import json
-import sys
 import socket
 import time
 
