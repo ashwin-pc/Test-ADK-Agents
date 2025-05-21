@@ -10,12 +10,14 @@ import shutil
 
 # Add the parent directory to sys.path to allow importing from the parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from agent_models import POWERFUL_MODEL
+from agent_models import SMART_MODEL
 
 # Use zsh as the shell if it's available, fallback to bash
 SHELL = '/bin/zsh' if os.path.exists('/bin/zsh') else '/bin/bash'
 
 CLAUDE_CODE_CMD = os.getenv("CLAUDE_CODE_CMD", "claude")
+# Default repository path if not specified
+DEFAULT_REPO_PATH = os.getenv("REPO_AGENT_PATH", os.getcwd())
 
 def execute_claude_code(prompt: str, repo_path: str) -> dict:
     """
@@ -109,7 +111,7 @@ def execute_claude_code(prompt: str, repo_path: str) -> dict:
             "error_message": f"Failed to execute Claude Code: {str(e)}"
         }
 
-def search_repository(query: str, repo_path: str, file_patterns: Optional[List[str]] = None) -> dict:
+def search_repository(query: str, repo_path: str = DEFAULT_REPO_PATH, file_patterns: Optional[List[str]] = None) -> dict:
     """
     Search for code, patterns or concepts in a repository using Claude Code.
     
@@ -139,7 +141,7 @@ def search_repository(query: str, repo_path: str, file_patterns: Optional[List[s
             "error_message": f"Repository search failed: {str(e)}"
         }
 
-def explain_code(file_path: str, repo_path: str, line_range: Optional[str] = None) -> dict:
+def explain_code(file_path: str, repo_path: str = DEFAULT_REPO_PATH, line_range: Optional[str] = None) -> dict:
     """
     Explain code in a file using Claude Code.
     
@@ -180,7 +182,7 @@ def explain_code(file_path: str, repo_path: str, line_range: Optional[str] = Non
             "error_message": f"Code explanation failed: {str(e)}"
         }
 
-def modify_code(instruction: str, file_path: str, repo_path: str) -> dict:
+def modify_code(instruction: str, file_path: str, repo_path: str = DEFAULT_REPO_PATH) -> dict:
     """
     Modify code in a file using Claude Code.
     
@@ -218,7 +220,7 @@ def modify_code(instruction: str, file_path: str, repo_path: str) -> dict:
             "error_message": f"Code modification failed: {str(e)}"
         }
 
-def execute_task(task: str, repo_path: str) -> dict:
+def execute_task(task: str, repo_path: str = DEFAULT_REPO_PATH) -> dict:
     """
     Execute a general task in the repository using Claude Code.
     
@@ -240,9 +242,9 @@ def execute_task(task: str, repo_path: str) -> dict:
         }
 
 # Create the Repository agent with Claude Code
-repo_agent = LlmAgent(
-    name="repo_agent",
-    model=LiteLlm(model=POWERFUL_MODEL),
+root_agent = LlmAgent(
+    name="claude_repo_agent",
+    model=LiteLlm(model=SMART_MODEL),
     description="Agent to interact with code repositories using Claude Code",
     instruction=(
         "You are a helpful agent who can analyze, explain, and modify code in repositories "
@@ -257,6 +259,3 @@ repo_agent = LlmAgent(
         execute_task,
     ],
 )
-
-# Export the agent
-root_agent = repo_agent

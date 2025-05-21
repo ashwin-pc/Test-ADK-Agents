@@ -172,22 +172,22 @@ Located in `opensearch_agent/agent.py`, this implementation provides:
 
 The OpenSearch agent demonstrates how to integrate external data stores with LLM agents to enable semantic search and data management capabilities.
 
-### Repository Agent with Claude Code
+### Claude Code Repository Agent
 
-Located in `repo_agent/agent.py`, this implementation provides:
+Located in `cc_repo_agent/agent.py`, this implementation provides:
 - Integration with the Claude Code CLI to analyze repositories
 - Code search functionality to find patterns and concepts in codebases
 - Code explanation capability to understand files or specific code sections
 - Code modification tools to implement changes based on instructions
 - General task execution for repository-related operations
 
-The Repository Agent demonstrates how to leverage Claude's advanced code understanding capabilities within an agent framework to interact with code repositories.
+The Claude Code Repository Agent demonstrates how to leverage Claude's advanced code understanding capabilities within an agent framework to interact with code repositories.
 
-#### Testing the Repository Agent
+#### Testing the Claude Code Repository Agent
 
-Test your Repository Agent setup with a local repository:
+Test your Claude Code Repository Agent setup with a local repository:
 ```bash
-python test_repo_agent.py --repo-path /path/to/your/repository
+python -m cc_repo_agent.test --repo-path /path/to/your/repository
 ```
 
 This test script:
@@ -203,6 +203,11 @@ This test script:
 If you use a custom alias for Claude Code (like `cc`), you can configure it by setting the `CLAUDE_CODE_CMD` environment variable in your `.env` file:
 ```
 CLAUDE_CODE_CMD=cc
+```
+
+You can also set the repository path in your `.env` file for ADK web integration:
+```
+CC_REPO_AGENT_PATH=/path/to/your/repository
 ```
 
 ### GitHub MCP Agent

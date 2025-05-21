@@ -1,4 +1,4 @@
-# Repository Agent
+# Claude Code Repository Agent
 
 This agent provides capabilities to interact with code repositories using Claude Code as its underlying tool. The agent can help analyze and modify code across repositories using natural language instructions.
 
@@ -18,7 +18,7 @@ This agent provides capabilities to interact with code repositories using Claude
 ## Usage
 
 ```python
-from repo_agent.agent import repo_agent
+from cc_repo_agent.agent import repo_agent
 
 # Search for specific patterns in a repository
 result = repo_agent.tools.search_repository(
@@ -50,7 +50,7 @@ result = repo_agent.tools.execute_task(
 
 ## Testing
 
-To test the Repository Agent, run the included test script:
+To test the Claude Code Repository Agent, run the included test script:
 
 ```bash
 python test.py --repo-path "/path/to/your/repo"
