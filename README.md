@@ -205,6 +205,16 @@ If you use a custom alias for Claude Code (like `cc`), you can configure it by s
 CLAUDE_CODE_CMD=cc
 ```
 
+### GitHub MCP Agent
+
+Located in `github_agent/agent.py`, this agent interacts with GitHub using the official [GitHub MCP Server](https://github.com/github/github-mcp-server).
+- Connects to the GitHub MCP Server, which runs as a Docker container.
+- Requires a GitHub Personal Access Token (PAT) for authentication, configured via the `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable.
+- Allows the agent to use tools dynamically provided by the GitHub MCP server for various GitHub operations (e.g., managing issues, repositories, pull requests).
+- Configuration for the server (like specific toolsets or GitHub Enterprise Server URLs) can also be managed via environment variables. Refer to `github_agent/README.md` for details.
+
+This agent demonstrates using ADK's `MCPToolset` to integrate with external MCP-compliant servers, enabling interaction with services like GitHub through a standardized protocol.
+
 ## Future Work
 
 - Implement additional agent types and capabilities
